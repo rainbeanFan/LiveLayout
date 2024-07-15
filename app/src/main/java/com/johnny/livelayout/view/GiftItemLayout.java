@@ -19,8 +19,6 @@ import com.johnny.livelayout.bean.GiftBean;
 
 public class GiftItemLayout extends LinearLayout implements Animation.AnimationListener {
 
-    public final String TAG = GiftItemLayout.class.getSimpleName();
-
     private Handler handler = new Handler(){
         @Override
         public void handleMessage(Message msg) {

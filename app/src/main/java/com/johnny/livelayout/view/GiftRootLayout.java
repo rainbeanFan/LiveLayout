@@ -16,7 +16,6 @@ import java.util.TreeMap;
 
 public class GiftRootLayout extends LinearLayout implements Animation.AnimationListener, GiftAnimListener {
 
-    public final String TAG = GiftRootLayout.class.getSimpleName();
 
     private GiftItemLayout firstItemLayout, lastItemLayout;
     private Animation firstGiftItemInAnim, firstGiftItemOutAnim;

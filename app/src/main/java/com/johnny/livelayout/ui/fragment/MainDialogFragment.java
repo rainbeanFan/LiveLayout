@@ -18,13 +18,13 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import com.johnny.livelayout.R;
+import com.johnny.livelayout.databinding.FragmentMainBinding;
 
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+
 import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 
 /**
@@ -46,8 +46,8 @@ import fr.castorflex.android.verticalviewpager.VerticalViewPager;
 @SuppressLint("ValidFragment")
 public class MainDialogFragment extends DialogFragment implements ViewPager.OnPageChangeListener {
 
+    private FragmentMainBinding binding;
 
-    @BindView(R.id.viewpager) VerticalViewPager viewPager;
     private BaseFragmentPagerAdapter fragmentPagerAdapter;
 
     private FrameLayout viewById;
@@ -59,13 +59,14 @@ public class MainDialogFragment extends DialogFragment implements ViewPager.OnPa
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        binding = FragmentMainBinding.inflate(inflater, container, false);
+        return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
+
         getDialog().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);/*同时将界面改为resize已达到软键盘弹出时LiveFragment不会跟随移动*/
         initViewPagerData();
         initViewPager();
@@ -75,11 +76,11 @@ public class MainDialogFragment extends DialogFragment implements ViewPager.OnPa
      * 初始化viewpager
      */
     private void initViewPager() {
-        viewPager.setOffscreenPageLimit(3);
-        viewPager.setOnPageChangeListener(this);
+        binding.viewpager.setOffscreenPageLimit(3);
+        binding.viewpager.setOnPageChangeListener(this);
         fragmentPagerAdapter = new BaseFragmentPagerAdapter(getChildFragmentManager(), pageFragmentCache);
-        viewPager.setAdapter(fragmentPagerAdapter);
-        viewPager.setCurrentItem(mCurrentItem);
+        binding.viewpager.setAdapter(fragmentPagerAdapter);
+        binding.viewpager.setCurrentItem(mCurrentItem);
     }
 
     /**
@@ -137,7 +138,7 @@ public class MainDialogFragment extends DialogFragment implements ViewPager.OnPa
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            viewPager.setCurrentItem(1, false);
+                            binding.viewpager.setCurrentItem(1, false);
                         }
                     });
                 }

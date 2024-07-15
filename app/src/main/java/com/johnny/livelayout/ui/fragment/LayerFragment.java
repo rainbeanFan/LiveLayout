@@ -23,6 +23,7 @@ import com.johnny.livelayout.R;
 import com.johnny.livelayout.adapter.AudienceAdapter;
 import com.johnny.livelayout.adapter.MessageAdapter;
 import com.johnny.livelayout.bean.GiftBean;
+import com.johnny.livelayout.databinding.FragmentLayerBinding;
 import com.johnny.livelayout.tools.DisplayUtil;
 import com.johnny.livelayout.tools.SoftKeyBoardListener;
 import com.johnny.livelayout.view.GiftRootLayout;
@@ -33,9 +34,6 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * 该Fragment是用于dialogFragment中的pager，为了实现滑动隐藏交互Fragment的
@@ -60,19 +58,7 @@ public class LayerFragment extends Fragment {
     /**
      * 界面相关
      */
-    @BindView(R.id.llpicimage) LinearLayout llpicimage;
-    @BindView(R.id.rlsentimenttime) RelativeLayout rlsentimenttime;
-    @BindView(R.id.hlvaudience) HorizontalListView hlvaudience;
-    @BindView(R.id.lvmessage) ListView lvmessage;
-    @BindView(R.id.iv_privatechat) ImageView tvSendone;
-    @BindView(R.id.iv_gift) ImageView tvSendtwo;
-    @BindView(R.id.iv_share) ImageView tvSendthree;
-    @BindView(R.id.iv_close) ImageView tvSendfor;
-    @BindView(R.id.etInput) EditText etInput;
-    @BindView(R.id.iv_publicchat) ImageView tvChat;
-    @BindView(R.id.sendInput) TextView sendInput;
-    @BindView(R.id.llinputparent) LinearLayout llInputParent;
-    @BindView(R.id.giftRoot) GiftRootLayout giftRoot;
+    private FragmentLayerBinding mFragmentLayerBinding;
 
     /**
      * 动画相关
@@ -86,9 +72,8 @@ public class LayerFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_layer, container, false);
-        ButterKnife.bind(this, view);
-        return view;
+        mFragmentLayerBinding = FragmentLayerBinding.inflate(inflater, container, false);
+        return mFragmentLayerBinding.getRoot();
     }
 
     @Override
@@ -97,9 +82,9 @@ public class LayerFragment extends Fragment {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (llInputParent.getVisibility() == View.VISIBLE) {
-                    tvChat.setVisibility(View.VISIBLE);
-                    llInputParent.setVisibility(View.GONE);
+                if (mFragmentLayerBinding.viewLayer.llinputparent.getVisibility() == View.VISIBLE) {
+                    mFragmentLayerBinding.viewLayer.ivPublicchat.setVisibility(View.VISIBLE);
+                    mFragmentLayerBinding.viewLayer.llinputparent.setVisibility(View.GONE);
                     hideKeyboard();
                 }
             }
@@ -109,53 +94,69 @@ public class LayerFragment extends Fragment {
             messageData.add("Johnny: 默认聊天内容" + x);
         }
         messageAdapter = new MessageAdapter(getActivity(), messageData);
-        lvmessage.setAdapter(messageAdapter);
-        lvmessage.setSelection(messageData.size());
-        hlvaudience.setAdapter(new AudienceAdapter(getActivity()));
+        mFragmentLayerBinding.viewLayer.lvmessage.setAdapter(messageAdapter);
+        mFragmentLayerBinding.viewLayer.lvmessage.setSelection(messageData.size());
+        mFragmentLayerBinding.viewLayer.hlvaudience.setAdapter(new AudienceAdapter(getActivity()));
+
+        initViews();
+
     }
 
-    @OnClick(R.id.iv_publicchat) void clickChat(){
-        showChat();
-    }@OnClick(R.id.sendInput) void clickSendChat(){
-        sendText();
-    }@OnClick(R.id.iv_privatechat) void clickPrivateChat(){
-        GiftBean bean = new GiftBean();
-        bean.setGroup(1);
-        bean.setSortNum(11);
-        bean.setGiftImage(R.mipmap.ic_launcher);
-        bean.setGiftName("送出了一个礼物");
-        bean.setUserName("A");
-        bean.setUserAvatar(R.mipmap.ic_launcher);
-        giftRoot.loadGift(bean);
-    }@OnClick(R.id.iv_gift) void clickGift(){
-        GiftBean bean = new GiftBean();
-        bean.setGroup(1);
-        bean.setSortNum(22);
-        bean.setGiftImage(R.mipmap.ic_launcher);
-        bean.setGiftName("送出了一个礼物");
-        bean.setUserName("B");
-        bean.setUserAvatar(R.mipmap.ic_launcher);
-        giftRoot.loadGift(bean);
-    }@OnClick(R.id.iv_share) void clickShare(){
-        GiftBean bean = new GiftBean();
-        bean.setGroup(1);
-        bean.setSortNum(33);
-        bean.setGiftImage(R.mipmap.ic_launcher);
-        bean.setGiftName("送出了一个礼物");
-        bean.setUserName("C");
-        bean.setUserAvatar(R.mipmap.ic_launcher);
-        giftRoot.loadGift(bean);
-    }@OnClick(R.id.iv_close) void clickClose(){
-        getActivity().finish();
+    private void initViews() {
+        mFragmentLayerBinding.viewLayer.ivPrivatechat.setOnClickListener(v -> {
+            GiftBean bean = new GiftBean();
+            bean.setGroup(1);
+            bean.setSortNum(11);
+            bean.setGiftImage(R.mipmap.ic_launcher);
+            bean.setGiftName("送出了一个礼物");
+            bean.setUserName("A");
+            bean.setUserAvatar(R.mipmap.ic_launcher);
+            mFragmentLayerBinding.viewLayer.giftRoot.loadGift(bean);
+        });
+
+        mFragmentLayerBinding.viewLayer.ivGift.setOnClickListener(v -> {
+            GiftBean bean = new GiftBean();
+            bean.setGroup(1);
+            bean.setSortNum(22);
+            bean.setGiftImage(R.mipmap.ic_launcher);
+            bean.setGiftName("送出了一个礼物");
+            bean.setUserName("B");
+            bean.setUserAvatar(R.mipmap.ic_launcher);
+            mFragmentLayerBinding.viewLayer.giftRoot.loadGift(bean);
+        });
+
+        mFragmentLayerBinding.viewLayer.ivShare.setOnClickListener(v -> {
+            GiftBean bean = new GiftBean();
+            bean.setGroup(1);
+            bean.setSortNum(33);
+            bean.setGiftImage(R.mipmap.ic_launcher);
+            bean.setGiftName("送出了一个礼物");
+            bean.setUserName("C");
+            bean.setUserAvatar(R.mipmap.ic_launcher);
+            mFragmentLayerBinding.viewLayer.giftRoot.loadGift(bean);
+        });
+
+        mFragmentLayerBinding.viewLayer.ivPublicchat.setOnClickListener(v -> {
+            showChat();
+        });
+
+        mFragmentLayerBinding.viewLayer.ivClose.setOnClickListener(v -> {
+            getActivity().finish();
+        });
+
+        mFragmentLayerBinding.viewLayer.sendInput.setOnClickListener(v -> {
+            sendText();
+        });
+
     }
 
     /**
      * 显示聊天布局
      */
     private void showChat() {
-        tvChat.setVisibility(View.GONE);
-        llInputParent.setVisibility(View.VISIBLE);
-        llInputParent.requestFocus();
+        mFragmentLayerBinding.viewLayer.ivPublicchat.setVisibility(View.GONE);
+        mFragmentLayerBinding.viewLayer.llinputparent.setVisibility(View.VISIBLE);
+        mFragmentLayerBinding.viewLayer.llinputparent.requestFocus();
         showKeyboard();
     }
 
@@ -163,11 +164,11 @@ public class LayerFragment extends Fragment {
      * 发送消息
      */
     private void sendText() {
-        if (!etInput.getText().toString().trim().isEmpty()) {
-            messageData.add("Johnny: " + etInput.getText().toString().trim());
-            etInput.setText("");
+        if (!mFragmentLayerBinding.viewLayer.etInput.getText().toString().trim().isEmpty()) {
+            messageData.add("Johnny: " + mFragmentLayerBinding.viewLayer.etInput.getText().toString().trim());
+            mFragmentLayerBinding.viewLayer.etInput.setText("");
             messageAdapter.NotifyAdapter(messageData);
-            lvmessage.setSelection(messageData.size());
+            mFragmentLayerBinding.viewLayer.lvmessage.setSelection(messageData.size());
             hideKeyboard();
         } else
             hideKeyboard();
@@ -183,7 +184,7 @@ public class LayerFragment extends Fragment {
             public void run() {
                 InputMethodManager imm = (InputMethodManager)
                         getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(etInput, InputMethodManager.SHOW_FORCED);
+                imm.showSoftInput(mFragmentLayerBinding.viewLayer.etInput, InputMethodManager.SHOW_FORCED);
             }
         }, 100);
     }
@@ -193,7 +194,7 @@ public class LayerFragment extends Fragment {
      */
     public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(etInput.getWindowToken(), 0);
+        imm.hideSoftInputFromWindow(mFragmentLayerBinding.viewLayer.etInput.getWindowToken(), 0);
     }
 
     /**
@@ -209,8 +210,8 @@ public class LayerFragment extends Fragment {
 
             @Override
             public void keyBoardHide(int height) {/*软键盘隐藏：隐藏聊天输入框并显示聊天按钮，执行显示title动画，并修改listview高度和装载礼物容器的高度*/
-                tvChat.setVisibility(View.VISIBLE);
-                llInputParent.setVisibility(View.GONE);
+                mFragmentLayerBinding.viewLayer.ivPublicchat.setVisibility(View.VISIBLE);
+                mFragmentLayerBinding.viewLayer.llinputparent.setVisibility(View.GONE);
                 animateToShow();
                 dynamicChangeListviewH(150);
             }
@@ -223,17 +224,19 @@ public class LayerFragment extends Fragment {
      * @param heightPX
      */
     private void dynamicChangeListviewH(int heightPX) {
-        ViewGroup.LayoutParams layoutParams = lvmessage.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = mFragmentLayerBinding.viewLayer.lvmessage.getLayoutParams();
         layoutParams.height = DisplayUtil.dip2px(getActivity(), heightPX);
-        lvmessage.setLayoutParams(layoutParams);
+        mFragmentLayerBinding.viewLayer.lvmessage.setLayoutParams(layoutParams);
     }
 
     /**
      * 头部布局执行显示的动画
      */
     private void animateToShow() {
-        ObjectAnimator leftAnim = ObjectAnimator.ofFloat(rlsentimenttime, "translationX", -rlsentimenttime.getWidth(), 0);
-        ObjectAnimator topAnim = ObjectAnimator.ofFloat(llpicimage, "translationY", -llpicimage.getHeight(), 0);
+        ObjectAnimator leftAnim = ObjectAnimator.ofFloat(mFragmentLayerBinding.viewLayer.rlsentimenttime, "translationX",
+                -mFragmentLayerBinding.viewLayer.rlsentimenttime.getWidth(), 0);
+        ObjectAnimator topAnim = ObjectAnimator.ofFloat(mFragmentLayerBinding.viewLayer.llpicimage, "translationY",
+                -mFragmentLayerBinding.viewLayer.llpicimage.getHeight(), 0);
         animatorSetShow.playTogether(leftAnim, topAnim);
         animatorSetShow.setDuration(300);
         animatorSetShow.addListener(new AnimatorListenerAdapter() {
@@ -258,8 +261,9 @@ public class LayerFragment extends Fragment {
      * 头部布局执行退出的动画
      */
     private void animateToHide() {
-        ObjectAnimator leftAnim = ObjectAnimator.ofFloat(rlsentimenttime, "translationX", 0, -rlsentimenttime.getWidth());
-        ObjectAnimator topAnim = ObjectAnimator.ofFloat(llpicimage, "translationY", 0, -llpicimage.getHeight());
+        ObjectAnimator leftAnim = ObjectAnimator.ofFloat(mFragmentLayerBinding.viewLayer.rlsentimenttime, "translationX", 0, -mFragmentLayerBinding.viewLayer.rlsentimenttime.getWidth());
+        ObjectAnimator topAnim = ObjectAnimator.ofFloat(mFragmentLayerBinding.viewLayer.llpicimage, "translationY", 0,
+                -mFragmentLayerBinding.viewLayer.llpicimage.getHeight());
         animatorSetHide.playTogether(leftAnim, topAnim);
         animatorSetHide.setDuration(300);
         animatorSetHide.addListener(new AnimatorListenerAdapter() {

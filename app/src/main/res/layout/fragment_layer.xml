@@ -10,7 +10,9 @@
 
         <include layout="@layout/view_empty" />
 
-        <include layout="@layout/view_layer" />
+        <include
+            android:id="@+id/view_layer"
+            layout="@layout/view_layer" />
 
     </com.johnny.livelayout.view.SlideMenu>
 </RelativeLayout>
